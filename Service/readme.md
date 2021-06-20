@@ -1,8 +1,9 @@
 ## Execution
 - Open in Visual Studio and Start
+--OR--
 - Run command line
 ```
-cd [path]\Iw.Services\Iw.Services.Api
+cd [path]\Service\IW.TodoService.Api
 dotnet run
 ```
 
