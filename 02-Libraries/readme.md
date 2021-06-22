@@ -173,7 +173,8 @@ todo-list.component.ts
 ```
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatTableDataSource, MatSort } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 import { TodoDataService } from '../../services/todo-data.service';
 import { TodoItem } from '../../models/todo-item.model';
 
@@ -184,10 +185,10 @@ import { TodoItem } from '../../models/todo-item.model';
 export class TodoListComponent implements OnInit {
   constructor(private router: Router, private todoDataSvc: TodoDataService) { }
 
-  displayedColumns: string[] = ['id', 'name', 'description', 'createDate', 'dueDate', 'completedDate', 'isLate', 'isPastDue'];
-  items: MatTableDataSource<TodoItem>;
+  public displayedColumns: string[] = ['id', 'name', 'description', 'createDate', 'dueDate', 'completedDate', 'isLate', 'isPastDue'];
+  public items: MatTableDataSource<TodoItem> = new MatTableDataSource<TodoItem>();
 
-  @ViewChild(MatSort, null) sort: MatSort;
+  @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit() {
     this.todoDataSvc.getAll().subscribe(data => {
@@ -211,6 +212,53 @@ todo-list.component.html
     <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
     <td mat-cell *matCellDef="let row"> {{row.id}} </td>
   </ng-container>
-  
-  ...
+
+  <!-- name Column -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+    <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+  </ng-container>
+
+  <!-- description Column -->
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+    <td mat-cell *matCellDef="let row"> {{row.description}} </td>
+  </ng-container>
+
+  <!-- createDate Column -->
+  <ng-container matColumnDef="createDate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Created On </th>
+    <td mat-cell *matCellDef="let row">{{row.createDate | date:'MM/dd/yyyy'}} </td>
+  </ng-container>
+
+  <!-- dueDate Column -->
+  <ng-container matColumnDef="dueDate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Due Date </th>
+    <td mat-cell *matCellDef="let row">{{row.dueDate | date:'MM/dd/yyyy'}} </td>
+  </ng-container>
+
+  <!-- completedDate Column -->
+  <ng-container matColumnDef="completedDate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Completed On </th>
+    <td mat-cell *matCellDef="let row"> {{row.completedDate | date:'MM/dd/yyyy'}} </td>
+  </ng-container>
+
+  <!-- isLate Column -->
+  <ng-container matColumnDef="isLate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Is Late </th>
+    <td mat-cell *matCellDef="let row"> {{row.isLate}} </td>
+  </ng-container>
+
+  <!-- isPastDue Column -->
+  <ng-container matColumnDef="isPastDue">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Is Past Due </th>
+    <td mat-cell *matCellDef="let row"> {{row.isPastDue}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; let oddRow = odd; columns: displayedColumns;"
+    [ngClass]="{altRowStyle:oddRow}" (click)="itemClicked(row)"></tr>
+</table>
+
+<div class="todo-list-items" *ngIf="items">Found {{ items.data.length }} items.</div>
 ```
