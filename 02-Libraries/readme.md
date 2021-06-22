@@ -1,45 +1,17 @@
 # Workshop 2 - Links and code snippets
 ### Slide 6
 https://www.npmjs.com
+
 ### Slide 7
 https://material.angular.io/guide/getting-started
 ```
 ng add @angular/material
 ```
-### Slide 9
+
+### Slide 8
 https://material.angular.io/components/categories
-```
-import { NgModule } from '@angular/core';
-import { MatButtonModule, MatMenuModule, MatToolbarModule, MatIconModule,
-  MatCardModule, MatTableModule, MatSortModule, MatPaginatorModule,
-  MatCheckboxModule, MatFormFieldModule, MatDatepickerModule, MatNativeDateModule,
-  MatInputModule, MatRadioModule, MatSelectModule } from '@angular/material';
 
-const MATERIAL_MODULES = [
-  MatButtonModule,
-  MatMenuModule,
-  MatToolbarModule,
-  MatIconModule,
-  MatCardModule,
-  MatTableModule,
-  MatSortModule,
-  MatPaginatorModule,
-  MatCheckboxModule,
-  MatFormFieldModule,
-  MatDatepickerModule,
-  MatNativeDateModule,
-  MatInputModule,
-  MatRadioModule,
-  MatSelectModule
-];
-
-@NgModule({
-  imports: MATERIAL_MODULES,
-  exports: MATERIAL_MODULES
-})
-export class ThirdPartyComponentsModule { }
-```
-### Slide 11
+### Slide 10
 https://material.angular.io/components/toolbar/overview
 
 app-navigation.component.html
@@ -53,7 +25,8 @@ app-navigation.component.html
   </mat-toolbar-row>
 </mat-toolbar>
 ```
-### Slide 13
+
+### Slide 12
 https://material.angular.io/components/table/overview
 
 todo-list.component.html:
@@ -113,12 +86,12 @@ todo-list.component.html:
 
 <div class="todo-list-items" *ngIf="items">Found {{ items.length }} items.</div>
 ```
-### Slide 14
+### Slide 13
 todo-list.component.ts:
 ```
 displayedColumns: string[] = ['id', 'name', 'description', 'createDate', 'dueDate', 'completedDate', 'isLate', 'isPastDue'];
 ```
-### Slide 15
+### Slide 14
 todo-list.component.scss
 ```
 table.todo-list-datatable {
@@ -139,7 +112,7 @@ table.todo-list-datatable {
   }
 }
 ```
-### Slide 16
+### Slide 15
 todo-list.component.scss
 ```
   th.mat-header-cell {
@@ -160,7 +133,7 @@ todo-list.component.html
   <tr mat-row *matRowDef="let row; let oddRow = odd; columns: displayedColumns;"
     [ngClass]="{altRowStyle:oddRow}"></tr>
 ```
-### Slide 17
+### Slide 16
 todo-list.component.html
 ```
   <tr mat-row *matRowDef="let row; let oddRow = odd; columns: displayedColumns;"
@@ -195,7 +168,7 @@ export class TodoListComponent implements OnInit {
   }
 }
 ```
-### Slide 19
+### Slide 18
 todo-list.component.ts
 ```
 import { Component, OnInit, ViewChild } from '@angular/core';
