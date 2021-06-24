@@ -1,4 +1,6 @@
-<div><a [routerLink]="['/todo']" >Back</a></div>
-<div *ngIf="item">
-  {{ item | json }}
+<app-todo-item-view *ngIf="!isEditMode" [item]="item"></app-todo-item-view>
+<app-todo-item-edit *ngIf="isEditMode" [item]="item" (saved)="save($event)" (cancelled)="cancel()"></app-todo-item-edit>
+<div *ngIf="!isEditMode">
+  <button mat-stroked-button color="primary" (click)="edit()">Edit</button>
+  <button mat-stroked-button [routerLink]="['/todo']">&lt; Back</button>
 </div>

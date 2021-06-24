@@ -1,5 +1,5 @@
 # Workshop 3 - Components and Forms
-### Slide 8
+### Slide 9
 todo-item-edit.component.ts
 ```
   @Input() item: TodoItem;
@@ -19,7 +19,7 @@ todo-item-edit.component.html
     <button mat-stroked-button (click)="cancel()">Cancel</button>
   </div>
 ```
-### Slide 9
+### Slide 10
 ```
   public edit() {
     this.isEditMode = true;
@@ -34,7 +34,7 @@ todo-item-edit.component.html
     this.isEditMode = false;
   }
 ```
-### 2b - Slide 10
+### 2b - Slide 11
 ```
 <app-todo-item-view *ngIf="!isEditMode" [item]="item"></app-todo-item-view>
 <app-todo-item-edit *ngIf="isEditMode" [item]="item" (saved)="save($event)" (cancelled)="cancel()"></app-todo-item-edit>
@@ -43,9 +43,9 @@ todo-item-edit.component.html
   <button mat-stroked-button [routerLink]="['/todo']">&lt; Back</button>
 </div>
 ```
-### 2b - Slide 12
-https://angular.io/guide/forms-overview
 ### 2b - Slide 13
+https://angular.io/guide/forms-overview
+### 2b - Slide 14
 https://github.com/scott-neu-iw/intro-to-angular/tree/develop/Service
 
 todo-item-edit.component.ts
@@ -78,13 +78,14 @@ todo-item-edit.component.scss
   display: flex;
   flex-direction: column;
   width: 400px;
+  padding: 25px 0 0 25px;
 }
 
 .input-container > * {
   width: 100%;
 }
 ```
-### Slide 14
+### Slide 15
 todo-item-edit.html
 ```
 <form #todoForm="ngForm">
@@ -113,9 +114,13 @@ todo-item-edit.html
   </div>
 </form>
 ```
-### Slide 16
+### Slide 17
 ```
 name.className = {{ nameSpy.className }}
+<br>
+name.validity.valid = {{ nameSpy.validity.valid }}
+<br>
+name.validity.valueMissing = {{ nameSpy.validity.valueMissing }}
 <br>
 form.valid = {{ todoForm.form.valid }}
 <br>
@@ -126,7 +131,7 @@ form.untouched = {{ todoForm.form.untouched }}
 form.pristine = {{ todoForm.form.pristine }}
 
 ```
-### Slide 19
+### Slide 20
 todo-item-save.model.ts
 ```
 export interface TodoItemSave {
@@ -156,12 +161,12 @@ return {
   };
 }
 ```
-### Slide 20
+### Slide 21
 ```
 <button mat-stroked-button type="submit" color="primary"
   [disabled]="!todoForm.form.valid">Save</button>
 ```
-### Slide 21
+### Slide 22
 todo-data.service.ts
 ```
 public add(item: TodoItemSave): Observable<TodoItem> {
@@ -174,7 +179,7 @@ return this.httpClient.put<TodoItem>(url, item);
 }
 
 ```
-### Slide 22
+### Slide 23
 todo-item-edit.component.ts
 ```
   public submit() {

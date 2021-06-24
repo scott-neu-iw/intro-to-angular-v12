@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { AppSettingsService } from '../../core/services/app-settings.service';
 import { TodoItem } from '../models/todo-item.model';
+import { TodoItemSave } from '../models/todo-item-save.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +22,14 @@ export class TodoDataService {
   public get(id: number): Observable<TodoItem> {
     const url = `${this.baseUrl}/${id}`;
     return this.httpClient.get<TodoItem>(url);
+  }
+
+  public add(item: TodoItemSave): Observable<TodoItem> {
+    return this.httpClient.post<TodoItem>(this.baseUrl, item);
+  }
+
+  public update(id: number, item: TodoItemSave): Observable<TodoItem> {
+      const url = `${this.baseUrl}/${id}`;
+  return this.httpClient.put<TodoItem>(url, item);
   }
 }
