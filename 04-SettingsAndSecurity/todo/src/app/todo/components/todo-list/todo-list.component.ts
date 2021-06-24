@@ -27,4 +27,9 @@ export class TodoListComponent implements OnInit {
   public itemClicked(row: TodoItem) {
     this.router.navigate(['/todo', row.id]);
   }
+
+  public addItem() {
+    this.router.navigate(['/todo', 0])
+  }
 }
+
