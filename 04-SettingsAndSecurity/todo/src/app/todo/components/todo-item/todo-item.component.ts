@@ -58,6 +58,13 @@ export class TodoItemComponent implements OnInit {
     }
   }
 
+  public delete() {
+    this.todoDataSvc.delete(this.itemId).subscribe(() => {
+      this.snackBar.open("Success: Item deleted!", "Close", { duration: 5*1000 })
+      this.router.navigate(['/todo']);
+    });
+  }
+
   public save(value: TodoItem) {
     // update the route on a new item save, without triggering a route change
     if (this.itemId === 0) {

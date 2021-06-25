@@ -32,4 +32,9 @@ export class TodoDataService {
       const url = `${this.baseUrl}/${id}`;
   return this.httpClient.put<TodoItem>(url, item);
   }
+
+  public delete(id: number): Observable<object> {
+    const url = `${this.baseUrl}/${id}`;
+    return this.httpClient.delete(url);
+  }
 }
