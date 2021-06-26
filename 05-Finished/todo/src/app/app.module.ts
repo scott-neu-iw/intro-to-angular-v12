@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { CoreModule } from './core/core.module';
 import { TodoModule } from './todo/todo.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonModule } from '@angular/material/button'
 import { MatInputModule } from '@angular/material/input'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -33,6 +34,7 @@ export function appSettingsLoader(appSettingSvc: AppSettingsService) {
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
     MatToolbarModule,

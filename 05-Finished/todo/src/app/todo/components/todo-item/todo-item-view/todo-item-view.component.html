@@ -1,3 +1,23 @@
-<div>
-  {{ item | json }}
+<div class="item-wrapper">
+  <div class="prop">
+    <div class="field">Name:</div><div class="value">{{ item.name }}</div>
+  </div>
+  <div class="prop">
+    <div class="field">Description:</div><div class="value">{{ item.description }}</div>
+  </div>
+  <div class="prop">
+    <div class="field">Assigned To:</div><div class="value">{{ item.assignedTo }}</div>
+  </div>
+  <div class="prop">
+    <div class="field">Creation Date:</div><div class="value">{{ item.createDate | date }}</div>
+  </div>
+  <div class="prop">
+    <div class="field">Due Date:</div><div class="value" [ngClass]="{'late': item.isPastDue}">{{ item.dueDate | date }}</div>
+  </div>
+  <div class="prop">
+    <div class="field">Completed By:</div><div class="value">{{ item.completedBy }}</div>
+  </div>
+  <div class="prop">
+    <div class="field">Completed Date:</div><div class="value" [ngClass]="{'late': item.isLate}" >{{ item.completedDate | date }}</div>
+  </div>
 </div>

@@ -1,0 +1,26 @@
+.item-wrapper {
+  width: 500px;
+  margin: 10px;
+
+  .prop {
+    width: 100%;
+    .field {
+      background-color: gainsboro;
+      padding:5px;
+      color: black;
+      display: inline-block;
+      text-align: right;
+      width: 25%;
+      font-weight: 500;
+    }
+    .value {
+      padding:5px;
+      color: black;
+      display: inline-block;
+    }
+
+    .late {
+      color: crimson;
+    }
+  }
+}

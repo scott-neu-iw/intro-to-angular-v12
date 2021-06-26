@@ -65,6 +65,14 @@ export class TodoItemComponent implements OnInit {
     });
   }
 
+  public complete() {
+    debugger;
+    this.todoDataSvc.complete(this.itemId).subscribe(data => {
+      this.item = data;
+      this.snackBar.open("Success: Item completed!", "Close", { duration: 5*1000 })
+    })
+  }
+
   public save(value: TodoItem) {
     // update the route on a new item save, without triggering a route change
     if (this.itemId === 0) {

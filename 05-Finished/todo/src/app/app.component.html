@@ -1,2 +1,2 @@
-<app-app-navigation></app-app-navigation>
+<app-app-navigation *ngIf="authService.isLoggedIn()"></app-app-navigation>
 <router-outlet></router-outlet>

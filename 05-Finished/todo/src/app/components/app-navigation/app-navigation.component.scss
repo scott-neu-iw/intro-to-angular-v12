@@ -3,3 +3,8 @@
      Every toolbar row uses a flexbox row layout. */
   flex: 1 1 auto;
 }
+
+
+.header-links a {
+  padding: 0 15px 0 0;
+}
