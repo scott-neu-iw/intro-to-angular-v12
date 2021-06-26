@@ -1,0 +1,21 @@
+<form (ngSubmit)="login()" #loginForm="ngForm">
+  <div class="input-container">
+    <mat-form-field>
+      <input matInput placeholder="Username"
+        id="username" name="username" [(ngModel)]="model.username"
+        required [disabled]="isLoggingIn">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="password" matInput placeholder="Password"
+        id="password" name="password" [(ngModel)]="model.password"
+        required [disabled]="isLoggingIn">
+    </mat-form-field>
+  </div>
+  <div *ngIf="showBadLogin">
+    * Invalid username or password
+  </div>
+  <div>
+    <button mat-stroked-button type="submit" color="primary"
+      [disabled]="!loginForm.form.valid || isLoggingIn">Login</button>
+  </div>
+</form>

@@ -1,0 +1,10 @@
+<div *ngIf="items">Found {{ items.length }}</div>
+<ul>
+  <li *ngFor="let item of items">
+    <a [routerLink]="['/todo', item.id]">
+    {{ item.name }} -
+    {{ item.description }} -
+    {{ item.createDate | date:'MM/dd/yyy' }}
+    </a>
+  </li>
+</ul>

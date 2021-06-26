@@ -1,0 +1,28 @@
+<form (ngSubmit)="submit()" #todoForm="ngForm">
+  <div class="input-container">
+    <mat-form-field>
+      <input matInput placeholder="Name"
+      id="name" name="name" [(ngModel)]="model.name"
+      required>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea matInput placeholder="Description"
+      id="description" name="description" [(ngModel)]="model.description" required></textarea>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Assignee"
+      id="assignedTo" name="assignedTo" [(ngModel)]="model.assignedTo">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [matDatepicker]="dueDate"
+      id="dueDate" name="dueDate" placeholder="Due Date" [(ngModel)]="model.dueDate">
+      <mat-datepicker-toggle matSuffix [for]="dueDate"></mat-datepicker-toggle>
+      <mat-datepicker #dueDate></mat-datepicker>
+    </mat-form-field>
+  </div>
+  <div>
+    <button mat-stroked-button type="submit" color="primary"
+      [disabled]="!todoForm.form.valid">Save</button>
+    <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
+  </div>
+</form>
