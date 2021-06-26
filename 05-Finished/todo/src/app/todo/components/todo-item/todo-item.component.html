@@ -1,7 +1,8 @@
-<app-todo-item-view *ngIf="!isEditMode" [item]="item"></app-todo-item-view>
-<app-todo-item-edit *ngIf="isEditMode" [item]="item" (saved)="save($event)" (cancelled)="cancel()"></app-todo-item-edit>
+<app-todo-item-view *ngIf="!isEditMode && item" [item]="item"></app-todo-item-view>
+<app-todo-item-edit *ngIf="isEditMode && item" [item]="item" (saved)="save($event)" (cancelled)="cancel()"></app-todo-item-edit>
 <div *ngIf="!isEditMode">
-  <button mat-stroked-button color="primary" (click)="edit()">Edit</button>
-  <button mat-stroked-button (click)="delete()">Delete</button>
   <button mat-stroked-button [routerLink]="['/todo']">&lt; Back</button>
+  <button mat-stroked-button color="primary" (click)="edit()">Edit</button>
+  <button mat-stroked-button (click)="complete()" *ngIf="item && !item.completed" >Complete</button>
+  <button mat-stroked-button (click)="delete()">Delete</button>
 </div>

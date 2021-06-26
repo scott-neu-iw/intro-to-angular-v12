@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { AppSettingsService } from '../../core/services/app-settings.service';
 import { TodoItem } from '../models/todo-item.model';
 import { TodoItemSave } from '../models/todo-item-save.model';
+import { TodoItemComplete } from '../models/todo-item-complete.save';
 
 @Injectable({
   providedIn: 'root'
@@ -36,5 +37,14 @@ export class TodoDataService {
   public delete(id: number): Observable<object> {
     const url = `${this.baseUrl}/${id}`;
     return this.httpClient.delete(url);
+  }
+
+  public complete(id: number): Observable<TodoItem> {
+    const url = `${this.baseUrl}/${id}/complete`;
+    const reqModel: TodoItemComplete = {
+      byUser: 'Demo User'
+    };
+
+    return this.httpClient.patch<TodoItem>(url, reqModel);
   }
 }

@@ -1,12 +1,9 @@
 <mat-toolbar>
-  <mat-toolbar-row>
-    <a [routerLink]="['/']">Home</a> |
-    <a [routerLink]="['/todo']">Todo Items</a> |
-    {{ settings.environment }} |
-    {{ settings.apiUrl }}
+  <mat-toolbar-row class="header-links">
+    <a [routerLink]="['/todo']">Todo Items</a>
 
     <!-- This fills the remaining space of the current row -->
     <span class="fill-remaining-space"></span>
-    <a (click)="logoff()" href="javascript:void(0);">Logoff</a>
+    <button mat-stroked-button type="button" color="primary" (click)="logoff()">Logoff</button>
   </mat-toolbar-row>
 </mat-toolbar>
