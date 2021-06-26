@@ -36,7 +36,9 @@ import { AppSettingsService } from './app-settings.service';
 import { LoginRequest } from '../models/login-request.model';
 import { LoginResponse } from '../models/login-response.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthenticationService {
   constructor(private httpClient: HttpClient, private appSettingsSvc: AppSettingsService) { }
 
@@ -56,13 +58,14 @@ export class AuthenticationService {
     );
   }
 
-  loginUser(data: LoginResponse): void {
+  private loginUser(data: LoginResponse): void {
     sessionStorage.setItem(this.TOKEN_NAME, data.accessToken);
     // todo: extract user from jwt
   }
 }
+
 ```
-### Slide 14/15
+### Slide 15/16
 login.component.ts
 ```
 import { Component, OnInit } from '@angular/core';
@@ -79,7 +82,7 @@ import { AuthenticationService } from '../../core/services/authentication.servic
 export class LoginComponent implements OnInit {
   constructor(private router: Router, private authService: AuthenticationService) { }
 
-  public model: LoginRequest;
+  public model!: LoginRequest;
   public showBadLogin = false;
   public isLoggingIn = false;
 
@@ -138,7 +141,7 @@ login.component.scss
   width: 100%;
 }
 ```
-### Slide 16
+### Slide 17
 app-routing.module.ts
 ```
 const routes: Routes = [
@@ -147,7 +150,7 @@ const routes: Routes = [
   { path: '**', redirectTo: '/todo' }
 ];
 ```
-### Slide 17/18
+### Slide 18/19
 authentication.service.ts
 ```
 import { Injectable } from '@angular/core';
@@ -168,8 +171,7 @@ export class AuthenticationService {
               }
 
   private TOKEN_NAME = 'accessToken';
-
-  public currentUser: User;
+  public currentUser?: User;
   private jwtHelper: JwtHelperService;
 
   public login(loginRequest: LoginRequest): Observable<boolean> {
@@ -216,16 +218,16 @@ export class AuthenticationService {
   }
 }
 ```
-### Slide 19
+### Slide 20
 authentication.service.ts
 ```
   public logoff() {
     sessionStorage.clear();
-    this.currentUser = null;
+    this.currentUser = undefined;
     this.router.navigate(['/login']);
   }
 ```
-### Slide 20
+### Slide 21
 app-navigation.component.html
 ```
     <!-- This fills the remaining space of the current row -->
@@ -248,25 +250,29 @@ app-navigation.component.ts
     this.authService.logoff();
   }
   ```
-### Slide 23
+### Slide 24
 is-logged-in.guard.ts
 ```
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot,
-         RouterStateSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate,
+  Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { Observable } from 'rxjs';
 import { AuthenticationService } from '../services/authentication.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class IsLoggedInGuard implements CanActivate {
   constructor(private router: Router,
-              private authSvc: AuthenticationService) { }
+    private authSvc: AuthenticationService) {}
 
-  canActivate(route: ActivatedRouteSnapshot,
-              state: RouterStateSnapshot): boolean {
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+    ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     if (this.authSvc.isLoggedIn()) {
       return true;
     } else {
-      // tslint:disable-next-line:no-console
       console.info('Not logged in, redirecting');
       this.router.navigate(['/login']);
       return false;
@@ -274,7 +280,7 @@ export class IsLoggedInGuard implements CanActivate {
   }
 }
 ```
-### Slide 24
+### Slide 25
 todo-routing.module.ts
 ```
 const routes: Routes = [
@@ -297,100 +303,30 @@ const routes: Routes = [
 
 ```
 ### Slide 28
-app-settings.model.ts
-```
-export interface AppSettings {
-  environment: string;
-  apiUrl: string;
-  jwtAttachDomains: Array<string | RegExp>;
-  jwtIgnoreRoutes: Array<string | RegExp>;
-}
-```
-app-settings.service.ts
-```
-  constructor() {
-    this.appSettings = {
-      environment: 'dev',
-      apiUrl: 'http://localhost:8080',
-      jwtAttachDomains: ['localhost:8080'],
-      jwtIgnoreRoutes: ['/v2/authentication/login']
-    };
-  }
-```
-### Slide 29/30
 authenticated.interceptor.ts
 ```
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AppSettingsService } from './app-settings.service';
 import { AuthenticationService } from './authentication.service';
-import { parse, UrlWithParsedQuery } from 'url';
 
 @Injectable()
 export class AuthenticatedInterceptor implements HttpInterceptor {
-  constructor(private appSettingsSvc: AppSettingsService, private authSvc: AuthenticationService) { }
+  constructor(private authSvc: AuthenticationService) {}
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (this.appSettingsSvc.settings) {
-      const requestUrl = parse(request.url, true, true);
-
-      if (this.isWhitelistedDomain(requestUrl, this.appSettingsSvc.settings.jwtAttachDomains)
-        && !this.isBlacklistedRoute(requestUrl, this.appSettingsSvc.settings.jwtIgnoreRoutes)) {
-
-        request = request.clone({
-          setHeaders: {
-            Authorization: `Bearer ${this.authSvc.getLoginToken()}`
-          }
-        });
-      }
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    if (this.authSvc.isLoggedIn()) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${this.authSvc.getLoginToken()}`
+        }
+      });
     }
-
     return next.handle(request);
   }
-
-  // https://github.com/auth0/angular2-jwt/blob/master/src/jwt.interceptor.ts
-
-  /**
-   * Determine if the domain is whitelisted
-   * @param requestUrl the request
-   * @param whitelistedDomains whitelisted domains
-   */
-  private isWhitelistedDomain(requestUrl: UrlWithParsedQuery, whitelistedDomains: Array<string | RegExp>): boolean {
-    return (
-      requestUrl.host === null ||
-      whitelistedDomains.findIndex(
-        domain =>
-          typeof domain === 'string'
-            ? domain === requestUrl.host
-            : domain instanceof RegExp
-              ? domain.test(requestUrl.host)
-              : false
-      ) > -1
-    );
-  }
-
-  /**
-   * Determines if the route is backlisted
-   * @param requestUrl the request
-   * @param blacklistedRoutes blacklisted domains
-   */
-  private isBlacklistedRoute(requestUrl: UrlWithParsedQuery, blacklistedRoutes: Array<string | RegExp>): boolean {
-    return (
-      blacklistedRoutes.findIndex(
-        route =>
-          typeof route === 'string'
-            ? route === requestUrl.pathname
-            : route instanceof RegExp
-              ? route.test(requestUrl.pathname)
-              : false
-      ) > -1
-    );
-  }
 }
-
 ```
-### Slide 31
+### Slide 29
 app.module.ts
 ```
   providers: [
@@ -399,36 +335,37 @@ app.module.ts
       multi: true },
   ],
 ```
-### Slide 34
+### Slide 32
 assets\app-settings.json
 ```
 {
   "environment": "dev",
-  "apiUrl": "http://localhost:8080",
-  "jwtAttachDomains": ["localhost:8080"],
-  "jwtIgnoreRoutes": ["/v2/authentication/login"]
+  "apiUrl": "http://localhost:8080"
 }
 ```
-### Slide 35
+### Slide 33
 app-settings.service.ts
 ```
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
-import { AppSettings } from '../models/app-settings.model';
+import { Injectable } from '@angular/core';
 import { tap } from 'rxjs/operators';
 
-@Injectable()
-export class AppSettingsService {
-  constructor(private http: HttpClient) { }
+import { AppSettings } from '../models/app-settings.model';
 
-  private appSettings: AppSettings;
-  public get settings(): AppSettings {
+@Injectable({
+  providedIn: 'root'
+})
+export class AppSettingsService {
+  constructor(private httpClient: HttpClient) {
+  }
+
+  private appSettings!: AppSettings;
+  get settings(): AppSettings {
     return this.appSettings;
   }
 
   public loadConfig(): Promise<AppSettings> {
-    return this.http.get<AppSettings>('./assets/app-settings.json')
+    return this.httpClient.get<AppSettings>('./assets/app-settings.json')
       .pipe(
         tap((config) => {
           this.appSettings = config;
@@ -438,7 +375,7 @@ export class AppSettingsService {
   }
 }
 ```
-### Slide 36
+### Slide 34
 app.module.ts
 ```
 export function appSettingsLoader(appSettingSvc: AppSettingsService) {

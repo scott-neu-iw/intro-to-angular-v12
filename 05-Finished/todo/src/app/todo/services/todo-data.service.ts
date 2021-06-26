@@ -13,7 +13,7 @@ export class TodoDataService {
   constructor(private appSettingsSvc: AppSettingsService,
     private httpClient: HttpClient) { }
 
-  private baseUrl = `${this.appSettingsSvc.settings.apiUrl}/v1/todoitems`;
+  private baseUrl = `${this.appSettingsSvc.settings.apiUrl}/v2/todoitems`;
 
   public getAll(): Observable<Array<TodoItem>> {
     return this.httpClient.get<Array<TodoItem>>(this.baseUrl);

@@ -4,5 +4,9 @@
     <a [routerLink]="['/todo']">Todo Items</a> |
     {{ settings.environment }} |
     {{ settings.apiUrl }}
+
+    <!-- This fills the remaining space of the current row -->
+    <span class="fill-remaining-space"></span>
+    <a (click)="logoff()" href="javascript:void(0);">Logoff</a>
   </mat-toolbar-row>
 </mat-toolbar>
