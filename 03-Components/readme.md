@@ -95,7 +95,7 @@ todo-item-edit.component.html
 ### 2b - Slide 13
 https://angular.io/guide/forms-overview
 ### 2b - Slide 14
-https://github.com/scott-neu-iw/intro-to-angular/tree/develop/Service
+https://github.com/scott-neu-iw/intro-to-angular-v12/tree/main/Service
 
 todo-item-edit.component.ts
 ```

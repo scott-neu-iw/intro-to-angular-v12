@@ -57,7 +57,7 @@ app-navigation.component.html
 <hr>
 ```
 ### Slide 27:
-https://github.com/scott-neu-iw/intro-to-angular/tree/develop/Service
+https://github.com/scott-neu-iw/intro-to-angular-v12/tree/main/Service
 
 ### Slide 28:
 todo-item.model.ts
