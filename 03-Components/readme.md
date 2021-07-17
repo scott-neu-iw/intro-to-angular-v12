@@ -1,6 +1,6 @@
 # Workshop 3 - Components and Forms
 ### Slide 6
-toto.module.ts
+todo.module.ts
 ```
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -21,15 +21,11 @@ import { MatTableModule } from '@angular/material/table';
 // import components
 import { TodoListComponent } from './components/todo-list/todo-list.component';
 import { TodoItemComponent } from './components/todo-item/todo-item.component';
-import { TodoItemViewComponent } from './components/todo-item/todo-item-view/todo-item-view.component';
-import { TodoItemEditComponent } from './components/todo-item/todo-item-edit/todo-item-edit.component';
 
 @NgModule({
   declarations: [
     TodoListComponent,
-    TodoItemComponent,
-    TodoItemViewComponent,
-    TodoItemEditComponent
+    TodoItemComponent
   ],
   imports: [
     CommonModule,
@@ -51,7 +47,7 @@ export class TodoModule { }
 ### Slide 9
 todo-item-edit.component.ts
 ```
-  @Input() item: TodoItem;
+  @Input() item!: TodoItem;
   @Output() cancelled = new EventEmitter<void>();
   @Output() saved = new EventEmitter<TodoItem>();
 
@@ -64,12 +60,45 @@ todo-item-edit.component.ts
 ```
 todo-item-edit.component.html
 ```
-  <div>
-    <button mat-stroked-button (click)="cancel()">Cancel</button>
-  </div>
+	<div>
+	  {{ item | json }}
+	</div>
+	<div>
+	  <button mat-stroked-button (click)="cancel()">Cancel</button>
+	</div>
 ```
 ### Slide 10
+todo-item.component.ts
 ```
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { TodoDataService } from '../../services/todo-data.service';
+import { TodoItem } from '../../models/todo-item.model';
+
+@Component({
+  templateUrl: './todo-item.component.html',
+  styleUrls: ['./todo-item.component.scss']
+})
+export class TodoItemComponent implements OnInit {
+  constructor(
+    private route: ActivatedRoute,
+    private todoDataSvc: TodoDataService
+  ) {}
+
+  public itemId!: number;
+  public item!: TodoItem;
+  public isEditMode = false;
+
+  ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.itemId = params.id;
+
+      this.todoDataSvc.get(this.itemId).subscribe(data => {
+        this.item = data;
+      });
+    });
+  }
+
   public edit() {
     this.isEditMode = true;
   }
@@ -82,6 +111,8 @@ todo-item-edit.component.html
     // TODO: display save message
     this.isEditMode = false;
   }
+}
+
 ```
 ### 2b - Slide 11
 ```
@@ -97,7 +128,7 @@ https://angular.io/guide/forms-overview
 ### 2b - Slide 14
 https://github.com/scott-neu-iw/intro-to-angular-v12/tree/main/Service
 
-todo-item-edit.component.ts
+todo-item-edit.component.html
 ```
 <form>
   <div class="input-container">
@@ -210,10 +241,50 @@ return {
   };
 }
 ```
-### Slide 21
+todo-item-edit.component.html
 ```
-<button mat-stroked-button type="submit" color="primary"
-  [disabled]="!todoForm.form.valid">Save</button>
+<form #todoForm="ngForm">
+  <div class="input-container">
+    <mat-form-field>
+      <input matInput placeholder="Name"
+      id="name" name="name" [(ngModel)]="model.name"
+      required>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea matInput placeholder="Description"
+      id="description" name="description" [(ngModel)]="model.description"
+      required></textarea>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Assignee"
+      id="assignedTo" name="assignedTo" [(ngModel)]="model.assignedTo">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [matDatepicker]="dueDate"
+      id="dueDate" name="dueDate" placeholder="Due Date" [(ngModel)]="model.dueDate">
+      <mat-datepicker-toggle matSuffix [for]="dueDate"></mat-datepicker-toggle>
+      <mat-datepicker #dueDate></mat-datepicker>
+    </mat-form-field>
+  </div>
+  <div>
+    <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
+  </div>
+</form>
+```
+### Slide 21
+todo-item-edit.component.html
+```
+	<form (ngSubmit)="submit()" #todoForm="ngForm">
+```
+```
+	<button mat-stroked-button type="submit" color="primary"
+	  [disabled]="!todoForm.form.valid">Save</button>
+```
+todo-item-edit.component.ts
+```
+  public submit() {
+    // TODO: submit
+  }
 ```
 ### Slide 22
 todo-data.service.ts
@@ -223,8 +294,8 @@ public add(item: TodoItemSave): Observable<TodoItem> {
 }
 
 public update(id: number, item: TodoItemSave): Observable<TodoItem> {
-    const url = `${this.baseUrl}/${id}`;
-return this.httpClient.put<TodoItem>(url, item);
+	const url = `${this.baseUrl}/${id}`;
+	return this.httpClient.put<TodoItem>(url, item);
 }
 
 ```
