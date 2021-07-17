@@ -1,5 +1,5 @@
 # Workshop 1 - Links and code snippets
-### Slide 20:
+### Slide 22:
 app-settings.model.ts
 ```
 export interface AppSettings {
@@ -7,12 +7,15 @@ export interface AppSettings {
   apiUrl: string;
 }
 ```
+### Slide 23:
 app-settings.service.ts
 ```
 import { Injectable } from '@angular/core';
 import { AppSettings } from '../models/app-settings.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AppSettingsService {
   constructor() {
     this.appSettings = {
@@ -27,7 +30,7 @@ export class AppSettingsService {
   }
 }
 ```
-### Slide 24:
+### Slide 26:
 app-navigation.component.ts
 ```
 import { Component, OnInit } from '@angular/core';
@@ -42,7 +45,7 @@ import { AppSettings } from '../../core/models/app-settings.model';
 export class AppNavigationComponent implements OnInit {
   constructor(private appSettingsSvc: AppSettingsService) { }
 
-  public settings: AppSettings;
+  public settings!: AppSettings;
 
   ngOnInit() {
     this.settings = this.appSettingsSvc.settings;
@@ -56,10 +59,10 @@ app-navigation.component.html
 </div>
 <hr>
 ```
-### Slide 27:
+### Slide 29:
 https://github.com/scott-neu-iw/intro-to-angular-v12/tree/main/Service
 
-### Slide 28:
+### Slide 31:
 todo-item.model.ts
 ```
 export interface TodoItem {
@@ -76,17 +79,19 @@ export interface TodoItem {
   isLate: boolean;
 }
 ```
-### Slide 29:
+### Slide 32:
 todo-data.service.ts
 ```
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { AppSettingsService } from '../../core/services/app-settings.service';
 import { TodoItem } from '../models/todo-item.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class TodoDataService {
   constructor(private appSettingsSvc: AppSettingsService, private httpClient: HttpClient) { }
 
@@ -101,8 +106,9 @@ export class TodoDataService {
     return this.httpClient.get<TodoItem>(url);
   }
 }
+
 ```
-### Slide: 33
+### Slide: 36
 todo-routing.module.ts
 ```
 import { NgModule } from '@angular/core';
@@ -137,7 +143,7 @@ app-navigation.component.html
 <hr>
 ```
 
-### Slide 34:
+### Slide 37:
 todo-list.component.ts
 ```
 import { Component, OnInit } from '@angular/core';
@@ -151,7 +157,7 @@ import { TodoItem } from '../../models/todo-item.model';
 export class TodoListComponent implements OnInit {
   constructor(private todoDataSvc: TodoDataService) { }
 
-  items: Array<TodoItem>;
+  items!: Array<TodoItem>;
 
   ngOnInit() {
     this.todoDataSvc.getAll().subscribe(data => {
@@ -171,7 +177,7 @@ todo-list.component.html
   </li>
 </ul>
 ```
-### Slide 38
+### Slide 40
 todo-item.component.ts
 ```
 import { Component, OnInit } from '@angular/core';
@@ -189,8 +195,8 @@ export class TodoItemComponent implements OnInit {
     private todoDataSvc: TodoDataService
   ) {}
 
-  itemId: number;
-  item: TodoItem;
+  itemId!: number;
+  item!: TodoItem;
 
   ngOnInit() {
     this.route.params.subscribe(params => {
