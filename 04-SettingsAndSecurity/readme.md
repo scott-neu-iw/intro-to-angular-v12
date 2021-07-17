@@ -151,6 +151,10 @@ const routes: Routes = [
 ];
 ```
 ### Slide 18/19
+install library:
+```
+	npm install --save @auth0/angular-jwt
+```
 authentication.service.ts
 ```
 import { Injectable } from '@angular/core';
@@ -164,7 +168,9 @@ import { LoginRequest } from '../models/login-request.model';
 import { LoginResponse } from '../models/login-response.model';
 import { User } from '../models/user.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthenticationService {
   constructor(private httpClient: HttpClient, private appSettingsSvc: AppSettingsService) {
                 this.jwtHelper = new JwtHelperService();
@@ -196,7 +202,7 @@ export class AuthenticationService {
     return false;
   }
 
-  public getLoginToken(): string {
+  public getLoginToken(): string | null {
     return sessionStorage.getItem(this.TOKEN_NAME);
   }
 
@@ -205,16 +211,21 @@ export class AuthenticationService {
     this.extractUser();
   }
 
-  private extractUser() {
-    const decodedToken = this.jwtHelper.decodeToken(this.getLoginToken());
-    const user: User = {
-      id: decodedToken.sub,
-      email: decodedToken.email,
-      firstName: decodedToken.given_name,
-      lastName: decodedToken.family_name,
-      roles: decodedToken.user_authorization.split(',')
-    };
-    this.currentUser = user;
+ private extractUser() {
+    const token = this.getLoginToken();
+    if (token) {
+      const decodedToken = this.jwtHelper.decodeToken(token);
+      const user: User = {
+        id: decodedToken.sub,
+        email: decodedToken.email,
+        firstName: decodedToken.given_name,
+        lastName: decodedToken.family_name,
+        roles: decodedToken.user_authorization.split(',')
+      };
+      this.currentUser = user;
+    } else {
+      this.currentUser = undefined;
+    }
   }
 }
 ```

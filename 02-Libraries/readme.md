@@ -89,7 +89,7 @@ todo-list.component.html:
 ### Slide 13
 todo-list.component.ts:
 ```
-displayedColumns: string[] = ['id', 'name', 'description', 'createDate', 'dueDate', 'completedDate', 'isLate', 'isPastDue'];
+public displayedColumns: string[] = ['id', 'name', 'description', 'createDate', 'dueDate', 'completedDate', 'isLate', 'isPastDue'];
 ```
 ### Slide 14
 todo-list.component.scss
@@ -130,14 +130,12 @@ todo-list.component.scss
 ```
 todo-list.component.html
 ```
-  <tr mat-row *matRowDef="let row; let oddRow = odd; columns: displayedColumns;"
-    [ngClass]="{altRowStyle:oddRow}"></tr>
+  <tr mat-row *matRowDef="let row; let oddRow = odd; columns: displayedColumns;" [ngClass]="{altRowStyle:oddRow}"></tr>
 ```
 ### Slide 16
 todo-list.component.html
 ```
-  <tr mat-row *matRowDef="let row; let oddRow = odd; columns: displayedColumns;"
-    [ngClass]="{altRowStyle:oddRow}" (click)="itemClicked(row)"></tr>
+  <tr mat-row *matRowDef="let row; let oddRow = odd; columns: displayedColumns;" [ngClass]="{altRowStyle:oddRow}" (click)="itemClicked(row)"></tr>
 
 ```
 todo-list.component.ts
@@ -155,7 +153,7 @@ export class TodoListComponent implements OnInit {
   constructor(private router: Router, private todoDataSvc: TodoDataService) { }
 
   displayedColumns: string[] = ['id', 'name', 'description', 'createDate', 'dueDate', 'completedDate', 'isLate', 'isPastDue'];
-  items: Array<TodoItem>;
+  public items: Array<TodoItem> = [];
 
   ngOnInit() {
     this.todoDataSvc.getAll().subscribe(data => {
